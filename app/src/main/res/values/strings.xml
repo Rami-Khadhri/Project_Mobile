@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">MyApp</string>
+    <string name="login">login</string>
+    <string name="sign_up">signup</string>
+    <string name="my_app">Application</string>
+    <string name="profile">Profile</string>
+    <string name="tasks" >Tasks</string>
+    <string name="add_task">Add Task</string>
+    <string name="username">username</string>
+    <string name="password">password</string>
+    <string name="courses">Courses</string>
+    <string name="drawer_open" />
+    <string name="drawer_close" />
+    <string name="enter_task_name">Enter task name</string>
+    <string name="logout">Logout</string>
+    <string name="email">Email</string>
+</resources>
