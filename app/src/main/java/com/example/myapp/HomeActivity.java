@@ -4,55 +4,74 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.myapp.database.Course;
+import com.example.myapp.database.User;
 import com.example.myapp.databinding.ActivityHomeBinding;
 import com.example.myapp.fragments.CoursesFragment;
 import com.example.myapp.fragments.ProfileFragment;
 import com.example.myapp.fragments.TasksFragment;
+import com.example.myapp.fragments.TeachersFragment;
+import com.example.myapp.viewmodels.CourseViewModel;
 
 public class HomeActivity extends AppCompatActivity {
-    private ActivityHomeBinding binding;
     private int userId;
     private String username, email, password;
+    private User AuthenticatedUser = new User(-1, null, null, null);
+    private CourseViewModel courseViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityHomeBinding.inflate(getLayoutInflater());
+        ActivityHomeBinding binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        // Initialize ViewModel
+        courseViewModel = new ViewModelProvider(this).get(CourseViewModel.class);
 
         // Get user data from intent
         Intent intent = getIntent();
         userId = intent.getIntExtra("userId", -1);
         username = intent.getStringExtra("username");
-        email = intent.getStringExtra("email");
         password = intent.getStringExtra("password");
+        email = intent.getStringExtra("email");
 
+        AuthenticatedUser.setId(userId);
+        AuthenticatedUser.setUsername(username);
+        AuthenticatedUser.setPassword(password);
+        AuthenticatedUser.setEmail(email);
+        SessionManager sm = new SessionManager(this);
         // Set up the toolbar (AppBar)
         setSupportActionBar(binding.toolbar);
-
-        // Load default fragment
-       // loadFragment(new ProfileFragment(userId, username, email, password));
 
         // Set up bottom navigation
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             Fragment fragment;
-            if (item.getItemId() == R.id.nav_profile) {
+            int itemId = item.getItemId();
+
+            if (itemId == R.id.nav_profile) {
                 fragment = new ProfileFragment(userId, username, email, password);
-            } else if (item.getItemId() == R.id.nav_courses) {
+            } else if (itemId == R.id.nav_courses) {
                 fragment = new CoursesFragment();
-            } else if (item.getItemId() == R.id.nav_tasks) {
+            } else if (itemId == R.id.nav_tasks) {
                 fragment = new TasksFragment();
             } else {
                 return false;
             }
+
             loadFragment(fragment);
             return true;
         });
+
+        // Load default fragment (Courses)
+        loadFragment(new ProfileFragment(userId,username,email,password));
     }
 
     private void loadFragment(Fragment fragment) {
@@ -62,35 +81,47 @@ public class HomeActivity extends AppCompatActivity {
                 .commit();
     }
 
+    public User getAuthenticatedUser() {
+        return AuthenticatedUser;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu for the toolbar
-        getMenuInflater().inflate(R.menu.courses_menu, menu);
+        getMenuInflater().inflate(R.menu.menu_home, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        // Handle menu item selections using if-else
         int itemId = item.getItemId();
-        if (itemId == R.id.action_add) {
-            // Add Course action
-            // Add your logic here
+
+        if (itemId == R.id.action_add_course) {
+            loadFragment(new CoursesFragment());
             return true;
-        } else if (itemId == R.id.action_search) {
-            // Search action
-            // Add your logic here
+        } else if (itemId == R.id.action_search_course) {
+            Toast.makeText(this, "Search functionality coming soon", Toast.LENGTH_SHORT).show();
             return true;
-        } else if (itemId == R.id.action_list_all) {
-            // List All action
-            // Add your logic here
+        } else if (itemId == R.id.action_clear_courses) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Clear All Courses")
+                    .setMessage("Are you sure you want to delete all courses?")
+                    .setPositiveButton("Yes", (dialog, which) -> {
+                        CourseViewModel.deleteAllCourses();
+                        Toast.makeText(this, "All courses deleted", Toast.LENGTH_SHORT).show();
+                    })
+                    .setNegativeButton("No", null)
+                    .show();
+            loadFragment( new CoursesFragment());
             return true;
-        } else if (itemId == R.id.action_clear_all) {
-            // Clear All action
-            // Add your logic here
+        } else if (itemId == R.id.action_manage_teachers) {
+            loadFragment(new TeachersFragment());
             return true;
-        } else {
-            return super.onOptionsItemSelected(item);
         }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void updateAuthenticatedUser(User user) {
+        this.AuthenticatedUser = user;
     }
 }

@@ -38,6 +38,7 @@ public class AuthActivity extends AppCompatActivity {
     }
 
     private void handleLogin() {
+        dbHelper = new DatabaseHelper(this);
         String username = usernameField.getText().toString().trim();
         String password = passwordField.getText().toString().trim();
 
@@ -49,8 +50,8 @@ public class AuthActivity extends AppCompatActivity {
             startActivity(new Intent(this, HomeActivity.class)
                     .putExtra("userId", userId)
                     .putExtra("username", user.getUsername())
-                    .putExtra("email", user.getEmail())
-                    .putExtra("password", user.getPassword()));
+                    .putExtra("password", user.getPassword())
+                    .putExtra("email", user.getEmail()));
             finish();
         } else {
             Toast.makeText(this, "Invalid login", Toast.LENGTH_SHORT).show();

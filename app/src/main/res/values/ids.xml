@@ -3,4 +3,5 @@
     <item name="username" type="id" />
     <item name="password" type="id" />
     <item name="loginButton" type="id" />
+    <item name="btnBackToLogin" type="id" />
 </resources>

@@ -1,10 +1,15 @@
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="4dp">
+    android:layout_margin="12dp"
+    app:cardElevation="6dp"
+    app:cardCornerRadius="16dp"
+    app:strokeWidth="1dp"
+    app:strokeColor="#E0E0E0">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,68 +17,114 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView
-            android:id="@+id/tv_course_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tv_course_type"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp" />
-
+        <!-- Header with Icon and Course Name -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
 
+            <!-- Course Icon -->
+            <ImageView
+                android:id="@+id/iv_course_icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_book"
+                android:background="@drawable/circular_background"
+                android:padding="8dp"
+                android:layout_marginEnd="12dp"
+                app:tint="@android:color/white"/>
+
+            <!-- Course Name -->
             <TextView
+                android:id="@+id/tv_course_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Advanced Mobile Development"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="#333333"/>
+        </LinearLayout>
+
+        <!-- Course Details -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+
+            <!-- Teacher Details -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_teacher_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Dr. Jane Smith"
+                    android:textSize="14sp"
+                    android:textColor="#666666"
+                    android:drawableStart="@drawable/ic_teacher"
+                    android:drawablePadding="6dp"
+                    android:gravity="center_vertical"/>
+
+                <TextView
+                    android:id="@+id/tv_coefficient"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Coefficient: 0.75"
+                    android:textSize="12sp"
+                    android:textColor="#888888"
+                    android:layout_marginTop="4dp"
+                    android:drawableStart="@drawable/ic_coefficient"
+                    android:drawablePadding="6dp"
+                    android:gravity="center_vertical"/>
+            </LinearLayout>
+
+            <!-- Action Buttons -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Hours: " />
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
-            <EditText
-                android:id="@+id/et_hours"
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
-                android:inputType="numberDecimal" />
+                <!-- Edit Button -->
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/btn_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    app:fabSize="mini"
+                    app:srcCompat="@drawable/ic_edit"
+                    app:backgroundTint="#4CAF50"
+                    android:contentDescription="Edit Course"/>
 
-            <Spinner
-                android:id="@+id/spinner_teacher"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1" />
-
+                <!-- Delete Button -->
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/btn_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:fabSize="mini"
+                    app:srcCompat="@drawable/ic_delete"
+                    app:backgroundTint="#F44336"
+                    android:contentDescription="Delete Course"/>
+            </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <!-- Additional Info Chip -->
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_course_status"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
-
-            <Button
-                android:id="@+id/btn_edit"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:layout_weight="1"
-                android:text="EDIT" />
-
-            <Button
-                android:id="@+id/btn_delete"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_weight="1"
-                android:text="DELETE" />
-
-        </LinearLayout>
-
+            android:text="Active"
+            app:chipBackgroundColor="#4CAF50"
+            app:chipIcon="@drawable/ic_status"
+            android:textColor="@android:color/white"
+            android:layout_gravity="start"/>
     </LinearLayout>
-
 </com.google.android.material.card.MaterialCardView>

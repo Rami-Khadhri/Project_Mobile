@@ -27,6 +27,15 @@ public class SignUpActivity extends AppCompatActivity {
 
         dbHelper = new DatabaseHelper(this);
 
+        Button btnBackToLogin = findViewById(R.id.btnBackToLogin);
+        btnBackToLogin.setOnClickListener(view -> {
+            // Intent to go back to Login Activity
+            Intent intent = new Intent(SignUpActivity.this, AuthActivity.class);
+            startActivity(intent);
+            finish();
+        });
+
+
         Button signUpButton = findViewById(R.id.btnSignUp);
         signUpButton.setOnClickListener(view -> {
             String username = usernameField.getText().toString().trim();

@@ -21,12 +21,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_EMAIL = "email";
     private static final String COLUMN_USERNAME = "username";
     private static final String COLUMN_PASSWORD = "password";
-
+    private static final String COLUMN_COEFFICIENT = "coefficient";
     // Course Specific Columns
     private static final String COLUMN_COURSE_NAME = "course_name";
-    private static final String COLUMN_HOURS = "hours";
-    private static final String COLUMN_TYPE = "type";
-    private static final String COLUMN_TEACHER_ID = "teacher_id";
+    public static final String COLUMN_TEACHER_ID = "teacher_id";
 
     // Create Tables SQL
     private static final String CREATE_TABLE_USERS = "CREATE TABLE " + TABLE_USERS + "("
@@ -42,14 +40,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + COLUMN_EMAIL + " TEXT NOT NULL UNIQUE"
             + ")";
 
-    private static final String CREATE_TABLE_COURSES = "CREATE TABLE " + TABLE_COURSES + "("
-            + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-            + COLUMN_COURSE_NAME + " TEXT NOT NULL,"
-            + COLUMN_HOURS + " REAL NOT NULL,"
-            + COLUMN_TYPE + " TEXT NOT NULL,"
-            + COLUMN_TEACHER_ID + " INTEGER,"
+    private static final String CREATE_TABLE_COURSES = "CREATE TABLE " + TABLE_COURSES + " ("
+            + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + COLUMN_COURSE_NAME + " TEXT NOT NULL, "
+            + COLUMN_TEACHER_ID + " INTEGER, "
+            + COLUMN_COEFFICIENT + " REAL, "
             + "FOREIGN KEY(" + COLUMN_TEACHER_ID + ") REFERENCES " + TABLE_TEACHERS + "(" + COLUMN_ID + ")"
             + ")";
+
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -60,12 +58,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_USERS);
         db.execSQL(CREATE_TABLE_TEACHERS);
         db.execSQL(CREATE_TABLE_COURSES);
+        ContentValues values = new ContentValues();
 
+        // Insert Teacher 1
+        values.put(COLUMN_NAME, "Mariem baccouche");
+        values.put(COLUMN_EMAIL, "mariem@example.com");
+        db.insert(TABLE_TEACHERS, null, values);
+
+        // Insert Teacher 2
+        values.put(COLUMN_NAME, "Hend ben ayed");
+        values.put(COLUMN_EMAIL, "hend@example.com");
+        db.insert(TABLE_TEACHERS, null, values);
+
+        // Insert Teacher 3
+        values.put(COLUMN_NAME, "Lamia mansouri");
+        values.put(COLUMN_EMAIL, "lamia@example.com");
+        db.insert(TABLE_TEACHERS, null, values);
         // Add default admin user
         ContentValues adminValues = new ContentValues();
-        adminValues.put(COLUMN_USERNAME, "admin");
-        adminValues.put(COLUMN_EMAIL, "admin@example.com");
-        adminValues.put(COLUMN_PASSWORD, "admin123");
+        adminValues.put(COLUMN_USERNAME, "rami");
+        adminValues.put(COLUMN_EMAIL, "ramikhd5@gmail.com");
+        adminValues.put(COLUMN_PASSWORD, "rami");
         db.insert(TABLE_USERS, null, adminValues);
     }
 
@@ -203,4 +216,117 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         return exists;
     }
+
+    // Add a new teacher
+    public long addTeacher(String name, String email) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(COLUMN_NAME, name);
+        values.put(COLUMN_EMAIL, email);
+
+        return db.insert(TABLE_TEACHERS, null, values);
+    }
+
+    // Get a teacher by ID
+    public Cursor findTeacherById(int teacherId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.query(TABLE_TEACHERS,
+                null,
+                COLUMN_ID + "=?",
+                new String[]{String.valueOf(teacherId)},
+                null, null, null);
+    }
+
+    // Update a teacher's details
+    public int updateTeacher(int teacherId, String name, String email) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(COLUMN_NAME, name);
+        values.put(COLUMN_EMAIL, email);
+
+        return db.update(TABLE_TEACHERS,
+                values,
+                COLUMN_ID + "=?",
+                new String[]{String.valueOf(teacherId)});
+    }
+
+    // Delete a teacher
+    public int deleteTeacher(int teacherId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_TEACHERS,
+                COLUMN_ID + "=?",
+                new String[]{String.valueOf(teacherId)});
+    }
+
+
+    public Cursor getAllTeachers() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery("SELECT * FROM teachers", null);  // Adjust this SQL query based on your table structure
+    }
+    // Add a new course
+    public long addCourse(String courseName, String type, int teacherId, double coefficient) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(COLUMN_COURSE_NAME, courseName);
+        values.put(COLUMN_TEACHER_ID, teacherId);
+        values.put(COLUMN_COEFFICIENT, coefficient);
+
+        return db.insert(TABLE_COURSES, null, values);
+    }
+
+    // Get a course by ID
+    public Cursor findCourseById(int courseId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.query(TABLE_COURSES,
+                null,
+                COLUMN_ID + "=?",
+                new String[]{String.valueOf(courseId)},
+                null, null, null);
+    }
+
+    // Update a course's details
+    public int updateCourse(int courseId, String courseName, String type, int teacherId, double coefficient) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(COLUMN_COURSE_NAME, courseName);
+        values.put(COLUMN_TEACHER_ID, teacherId);
+        values.put(COLUMN_COEFFICIENT, coefficient);
+
+        return db.update(TABLE_COURSES,
+                values,
+                COLUMN_ID + "=?",
+                new String[]{String.valueOf(courseId)});
+    }
+
+    // Delete a course
+    public int deleteCourse(int courseId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_COURSES,
+                COLUMN_ID + "=?",
+                new String[]{String.valueOf(courseId)});
+    }
+
+    // Get all courses
+    public Cursor getAllCourses() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.query(TABLE_COURSES,
+                null,
+                null, null,
+                null, null, null);
+    }
+
+    // Get courses by teacher ID
+    public Cursor getCoursesByTeacherId(int teacherId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.query(TABLE_COURSES,
+                null,
+                COLUMN_TEACHER_ID + "=?",
+                new String[]{String.valueOf(teacherId)},
+                null, null, null);
+    }
+
 }

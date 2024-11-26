@@ -12,14 +12,17 @@ import java.util.List;
 public interface CourseDao {
 
     @Insert
-    void insert(Course course);
+    long insert(Course course);
 
     @Update
-    void update(Course course);
+    int update(Course course);
 
     @Delete
-    void delete(Course course);
+    int delete(Course course);
 
     @Query("SELECT * FROM courses ORDER BY id DESC")
     LiveData<List<Course>> getAllCourses();
+
+    @Query("DELETE FROM courses")
+    void deleteAllCourses(); // New function to delete all courses
 }

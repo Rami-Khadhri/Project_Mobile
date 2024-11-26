@@ -1,16 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layoutItemTask"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardViewTaskItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="8dp"
-    android:background="?attr/selectableItemBackground">
+    android:layout_margin="8dp"
+    app:cardElevation="4dp"
+    app:cardCornerRadius="8dp"
+    app:cardBackgroundColor="?attr/colorSurface">
 
-    <TextView
-        android:id="@+id/textViewTaskName"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/layoutItemTask"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Nom de la Tâche"
-        android:textSize="16sp" />
-</LinearLayout>
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical">
+
+        <!-- Task Icon -->
+        <ImageView
+            android:id="@+id/imageViewTaskIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="12dp"
+            android:src="@drawable/ic_task_icon" />
+
+        <!-- Task Details -->
+        <TextView
+            android:id="@+id/textViewTaskName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Nom de la Tâche"
+            android:textSize="16sp"
+            android:textColor="?attr/colorOnSurface"
+            android:maxLines="1"
+            android:ellipsize="end" />
+
+        <!-- Action Icon -->
+        <ImageView
+            android:id="@+id/imageViewDeleteTask"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_delete"
+            app:tint="?attr/colorError" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

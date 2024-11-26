@@ -19,6 +19,9 @@ public interface UserDao {
     @Update
     void update(User user);
 
+    @Query("UPDATE users SET username = :username, email = :email, password = :password WHERE id = :userId")
+    void updateUserById(int userId, String username, String email, String password);
+
     @Delete
     void delete(User user);
 
@@ -33,4 +36,5 @@ public interface UserDao {
 
     @Query("SELECT * FROM users")
     List<User> getAllUsers();
+
 }

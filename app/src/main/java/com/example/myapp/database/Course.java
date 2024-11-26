@@ -6,21 +6,36 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "courses")
 public class Course {
 
-     @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = true)
     private int id;
 
-    private String name;
+    private String course_name;
 
-    // Constructors, getters et setters
+    private int teacher_id;
 
-    public Course(String name) {
-        this.name = name;
+    private double coefficient;
+
+    public String getCourse_name() {
+        return course_name;
     }
 
-    // Getters et setters...
+    public void setCourse_name(String course_name) {
+        this.course_name = course_name;
+    }
 
-    public void setName(String name) {
-        this.name = name;
+    // Constructors, getters, and setters
+    public Course(String course_name, int teacher_id, double coefficient) {
+        this.course_name = course_name;
+        this.teacher_id = teacher_id;
+        this.coefficient = coefficient;
+    }
+
+    public int getTeacher_id() {
+        return teacher_id;
+    }
+
+    public void setTeacher_id(int teacher_id) {
+        this.teacher_id = teacher_id;
     }
 
     public void setId(int id) {
@@ -31,7 +46,19 @@ public class Course {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public int getTeacherId() {
+        return teacher_id;
+    }
+
+    public void setTeacherId(int teacherId) {
+        this.teacher_id = teacherId;
+    }
+
+    public double getCoefficient() {
+        return coefficient;
+    }
+
+    public void setCoefficient(double coefficient) {
+        this.coefficient = coefficient;
     }
 }

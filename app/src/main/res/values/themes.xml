@@ -4,6 +4,8 @@
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
-
+    <string name="or">or</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="dont_have_account_sign_up">Don\'t have an account? Sign Up</string>
     <style name="Theme.MyApp" parent="Base.Theme.MyApp" />
 </resources>
