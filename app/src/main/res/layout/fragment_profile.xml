@@ -57,7 +57,7 @@
                     android:id="@+id/textViewProfileTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Edit Profile"
+                    android:text="@string/edit_profile"
                     android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     android:textStyle="bold" />
@@ -126,7 +126,7 @@
                 android:id="@+id/editTextPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="New Password"
+                android:hint="@string/new_password"
                 android:inputType="textPassword"
                 android:drawableStart="@drawable/ic_password"
                 android:drawablePadding="12dp"/>
@@ -137,11 +137,22 @@
             android:id="@+id/buttonUpdateProfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Update Profile"
+            android:text="@string/update_profile"
             android:padding="16dp"
             app:cornerRadius="12dp"
             />
+        <!-- Language Selection Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonLanguageSelect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select Language"
+            android:padding="16dp"
+            app:cornerRadius="12dp"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_marginTop="16dp"/>
 
+        <!-- Logout Button (existing) -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_logout"
             android:layout_width="match_parent"

@@ -42,7 +42,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Advanced Mobile Development"
+                android:text="@string/advanced_mobile_development"
                 android:textStyle="bold"
                 android:textSize="18sp"
                 android:textColor="#333333"/>
@@ -66,7 +66,7 @@
                     android:id="@+id/tv_teacher_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Dr. Jane Smith"
+                    android:text="@string/dr_jane_smith"
                     android:textSize="14sp"
                     android:textColor="#666666"
                     android:drawableStart="@drawable/ic_teacher"
@@ -81,9 +81,9 @@
                     android:textSize="12sp"
                     android:textColor="#888888"
                     android:layout_marginTop="4dp"
-                    android:drawableStart="@drawable/ic_coefficient"
                     android:drawablePadding="6dp"
-                    android:gravity="center_vertical"/>
+                    android:gravity="center_vertical"
+                    app:drawableStartCompat="@drawable/ic_coefficient" />
             </LinearLayout>
 
             <!-- Action Buttons -->

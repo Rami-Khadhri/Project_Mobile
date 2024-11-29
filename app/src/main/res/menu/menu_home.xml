@@ -5,21 +5,21 @@
     <item
         android:id="@+id/action_add_course"
         android:icon="@drawable/ic_add"
-        android:title="Add Course"
+        android:title="@string/add_course"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_search_course"
         android:icon="@drawable/ic_search"
-        android:title="Search"
+        android:title="@string/search"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_manage_teachers"
-        android:title="Manage Teachers"
+        android:title="@string/manage_teachers"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_clear_courses"
-        android:title="Clear All Courses"
+        android:title="@string/clear_all_courses"
         app:showAsAction="never" />
 </menu>

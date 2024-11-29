@@ -15,7 +15,7 @@ import com.example.myapp.database.Course;
 import com.example.myapp.database.CourseDao;
 import com.example.myapp.database.DatabaseHelper;
 import com.example.myapp.database.Teacher;
-
+import com.example.myapp.utils.CourseNotificationHelper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -26,6 +26,7 @@ public class CourseViewModel extends AndroidViewModel {
     private final DatabaseHelper databaseHelper;
     private static Executor backgroundExecutor;
     private static Handler mainThreadHandler;
+    private Application application;
 
     private static final MutableLiveData<List<Course>> _allCourses = new MutableLiveData<>();
     public LiveData<List<Course>> allCourses = _allCourses;
@@ -38,6 +39,7 @@ public class CourseViewModel extends AndroidViewModel {
 
     public CourseViewModel(@NonNull Application application) {
         super(application);
+        this.application = application;
         AppDatabase database = AppDatabase.getDatabase(application);
         courseDao = database.courseDao();
         databaseHelper = new DatabaseHelper(application);
@@ -47,6 +49,9 @@ public class CourseViewModel extends AndroidViewModel {
         // Initial data load
         loadCourses();
         loadTeachers();
+
+        // notification channel
+        CourseNotificationHelper.createNotificationChannel(application);
     }
     public static void loadCourses() {
         courseDao.getAllCourses().observeForever(courses -> {
@@ -80,10 +85,17 @@ public class CourseViewModel extends AndroidViewModel {
             mainThreadHandler.post(() -> {
                 _operationStatus.setValue(result != -1);
                 loadCourses(); // Refresh courses after insert
+
+                // Show notification if course was successfully added
+                if (result != -1 && CourseNotificationHelper.canSendNotifications(application)) {
+                    CourseNotificationHelper.showCourseAddedNotification(
+                            application,
+                            course.getCourse_name()
+                    );
+                }
             });
         });
     }
-
     public void updateCourse(Course course) {
         backgroundExecutor.execute(() -> {
             int result = courseDao.update(course);

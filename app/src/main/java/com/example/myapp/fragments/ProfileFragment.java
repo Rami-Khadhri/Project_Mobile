@@ -1,8 +1,13 @@
 package com.example.myapp.fragments;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -29,6 +34,7 @@ import com.example.myapp.viewmodels.ProfileViewModel;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.Locale;
 
 public class ProfileFragment extends Fragment {
     private FragmentProfileBinding binding;
@@ -36,6 +42,57 @@ public class ProfileFragment extends Fragment {
     private final int userId;
     private final String username, email, password;
     private Bitmap selectedProfilePicture;
+
+
+    private void showLanguageSelectionDialog() {
+        String[] languages = {"English", "Français", "العربية"};
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Select Language")
+                .setSingleChoiceItems(languages, getCurrentLanguageIndex(), (dialog, which) -> {
+                    switch (which) {
+                        case 0: setLocale("en"); break;
+                        case 1: setLocale("fr"); break;
+                        case 2: setLocale("ar"); break;
+                    }
+                    dialog.dismiss();
+                })
+                .show();
+    }
+
+    private int getCurrentLanguageIndex() {
+        String currentLang = Locale.getDefault().getLanguage();
+        switch (currentLang) {
+            case "fr": return 1;
+            case "ar": return 2;
+            default: return 0;
+        }
+    }
+
+    private void setLocale(String languageCode) {
+        Locale locale = new Locale(languageCode);
+        Locale.setDefault(locale);
+
+        Resources resources = requireContext().getResources();
+        Configuration config = new Configuration(resources.getConfiguration());
+        config.setLocale(locale);
+
+        requireContext().getApplicationContext().createConfigurationContext(config);
+
+        requireContext().getSharedPreferences("AppSettings", Context.MODE_PRIVATE)
+                .edit()
+                .putString("language", languageCode)
+                .apply();
+
+        requireActivity().recreate();
+    }
+
+    // Add this method to apply saved language on app start
+    private void applyLanguageOnStart() {
+        SharedPreferences prefs = requireContext().getSharedPreferences("AppSettings", Context.MODE_PRIVATE);
+        String savedLanguage = prefs.getString("language", "en"); // default to English
+        setLocale(savedLanguage);
+    }
+
 
     // Permission launcher
     private final ActivityResultLauncher<String> requestPermissionLauncher =
@@ -81,9 +138,7 @@ public class ProfileFragment extends Fragment {
 
         // Set up profile picture click listener for image selection
         binding.imageViewProfilePic.setOnClickListener(v -> checkAndRequestPermission());
-
-        // Rest of the existing onCreateView code remains the same...
-
+        binding.buttonLanguageSelect.setOnClickListener(v -> showLanguageSelectionDialog());
         return binding.getRoot();
     }
 

@@ -21,7 +21,7 @@
             android:layout_height="48dp"
             android:layout_marginEnd="16dp"
             android:gravity="center"
-            android:text="T"
+            android:text=""
             android:textColor="@android:color/white"
             android:backgroundTint="?attr/colorPrimary"
             android:background="@drawable/rounded_edit_text"
@@ -39,7 +39,7 @@
                 android:id="@+id/textViewTeacherName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Teacher Name"
+                android:text="@string/teacher_name"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="?attr/colorOnSurface"
@@ -50,7 +50,7 @@
                 android:id="@+id/textViewTeacherEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Teacher Email"
+                android:text="@string/teacher_email"
                 android:textSize="14sp"
                 android:textColor="?attr/colorOnSurface"
                 android:ellipsize="end"
@@ -62,8 +62,8 @@
             android:id="@+id/imageViewMoreOptions"
             android:layout_width="24dp"
             android:layout_height="24dp"
-
+            android:contentDescription="ez"
             app:tint="?attr/colorOnSurface"
-            android:src="@android:drawable/ic_menu_more" />
+            android:src="@drawable/ic_contact" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

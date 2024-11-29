@@ -47,7 +47,7 @@
                 android:id="@+id/searchEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Search Courses"
+                android:hint="@string/search_courses"
                 android:inputType="text"
                 android:background="@android:color/white"
                 android:paddingVertical="12dp"/>
@@ -73,7 +73,7 @@
             android:id="@+id/textViewNoCourses"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No courses available."
+            android:text="@string/no_courses_available"
             android:textColor="#95A5A6"
             android:textSize="16sp"
             android:visibility="gone"
@@ -91,10 +91,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:contentDescription="Add new course"
-        app:srcCompat="@android:drawable/ic_input_add"
+        android:contentDescription="@string/add_new_course"
+        app:backgroundTint="#D14BC6"
+        app:elevation="6dp"
         app:fabSize="normal"
-        app:backgroundTint="#4CAF50"
-        app:tintMode="src_in"
-        app:elevation="6dp"/>
+        app:srcCompat="@android:drawable/ic_input_add"
+        app:tintMode="src_in" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

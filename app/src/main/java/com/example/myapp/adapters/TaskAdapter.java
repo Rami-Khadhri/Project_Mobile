@@ -3,6 +3,7 @@ package com.example.myapp.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
@@ -16,7 +17,15 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskViewHolder> {
     public TaskAdapter() {
         super(DIFF_CALLBACK);
     }
+    public interface OnTaskDeleteListener {
+        void onTaskDelete(Task task);
+    }
 
+    private OnTaskDeleteListener onTaskDeleteListener;
+
+    public void setOnTaskDeleteListener(OnTaskDeleteListener listener) {
+        this.onTaskDeleteListener = listener;
+    }
     private static final DiffUtil.ItemCallback<Task> DIFF_CALLBACK = new DiffUtil.ItemCallback<Task>() {
         @Override
         public boolean areItemsTheSame(@NonNull Task oldItem, @NonNull Task newItem) {
@@ -40,14 +49,22 @@ public class TaskAdapter extends ListAdapter<Task, TaskAdapter.TaskViewHolder> {
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         Task currentTask = getItem(position);
         holder.textViewTaskName.setText(currentTask.getName());
+        holder.imageViewDeleteTask.setOnClickListener(v -> {
+            if (onTaskDeleteListener != null) {
+                onTaskDeleteListener.onTaskDelete(currentTask);
+            }
+        });
     }
+
 
     class TaskViewHolder extends RecyclerView.ViewHolder {
         private TextView textViewTaskName;
+        private final ImageView imageViewDeleteTask;
 
         public TaskViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewTaskName = itemView.findViewById(R.id.textViewTaskName);
+            imageViewDeleteTask = itemView.findViewById(R.id.imageViewDeleteTask);
         }
     }
 }

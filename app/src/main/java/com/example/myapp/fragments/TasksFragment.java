@@ -56,16 +56,13 @@ public class TasksFragment extends Fragment {
                 Toast.makeText(getContext(), "Le nom de la tâche ne peut pas être vide", Toast.LENGTH_SHORT).show();
             }
         });
+        // Delete task
+        taskAdapter.setOnTaskDeleteListener(task -> {
+            taskViewModel.delete(task);
+            Toast.makeText(getContext(), "Tâche supprimée", Toast.LENGTH_SHORT).show();
+        });
     }
-    private void handleLogout() {
-        // Clear the session and navigate to LoginActivity
-        SessionManager sessionManager = new SessionManager(requireContext());
-        sessionManager.clearSession();
 
-        Intent intent = new Intent(getActivity(), AuthActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();

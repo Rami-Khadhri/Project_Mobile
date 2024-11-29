@@ -6,6 +6,6 @@
     </style>
     <string name="or">or</string>
     <string name="sign_in_with_google">Sign in with Google</string>
-    <string name="dont_have_account_sign_up">Don\'t have an account? Sign Up</string>
+    <string name="dont_have_account_sign_up" translatable="false">Don\'t have an account? Sign Up</string>
     <style name="Theme.MyApp" parent="Base.Theme.MyApp" />
 </resources>

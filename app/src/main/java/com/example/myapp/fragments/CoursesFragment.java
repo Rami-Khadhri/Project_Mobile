@@ -1,6 +1,9 @@
 package com.example.myapp.fragments;
 
+import android.Manifest;
 import android.app.AlertDialog;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,8 +16,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,6 +32,7 @@ import com.example.myapp.database.DatabaseHelper;
 import com.example.myapp.database.Teacher;
 import com.example.myapp.databinding.FragmentCoursesBinding;
 import com.example.myapp.viewmodels.CourseViewModel;
+import com.example.myapp.utils.CourseNotificationHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,39 +42,66 @@ public class CoursesFragment extends Fragment {
     private CourseViewModel courseViewModel;
     private CourseAdapter courseAdapter;
     private List<Teacher> teacherList = new ArrayList<>();
-    private List<Course> allCourses = new ArrayList<>(); // Store all courses
-    private List<Course> filteredCourses = new ArrayList<>(); // Store filtered courses
+    private List<Course> allCourses = new ArrayList<>();
+    private List<Course> filteredCourses = new ArrayList<>();
+    private DatabaseHelper dbHelper;
+
+    // Notification permission launcher
+    private final ActivityResultLauncher<String> requestNotificationPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    Toast.makeText(requireContext(), "Notification permission granted", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(requireContext(), "Notifications are disabled", Toast.LENGTH_SHORT).show();
+                }
+            });
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentCoursesBinding.inflate(inflater, container, false);
         return binding.getRoot();
-
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Initialize DatabaseHelper
+        dbHelper = new DatabaseHelper(requireContext());
+
+        // Check and request notification permission
+        checkNotificationPermission();
+
         // Initialize ViewModel
         courseViewModel = new ViewModelProvider(this).get(CourseViewModel.class);
+
         // Setup RecyclerView
         setupRecyclerView();
+
         // Setup Add Course Button
         setupAddCourseButton();
-        // Observe Courses
+
+        // Observe Courses and Teachers
         observeCourses();
-        // Observe Teachers
         observeTeachers();
+
+        // Setup Search Functionality
         setupSearchFunctionality();
-        setupRecyclerView();
+    }
+
+    private void checkNotificationPermission() {
+        // Request notification permission for Android 13+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestNotificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            }
+        }
     }
 
     private void setupRecyclerView() {
-        // Get DatabaseHelper instance
-        DatabaseHelper dbHelper = new DatabaseHelper(requireContext());
-
-        // Pass dbHelper to adapter
+        // Initialize CourseAdapter with DatabaseHelper
         courseAdapter = new CourseAdapter(dbHelper);
         binding.recyclerViewCourses.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.recyclerViewCourses.setAdapter(courseAdapter);
@@ -82,8 +116,6 @@ public class CoursesFragment extends Fragment {
             @Override
             public void onDeleteClick(Course course) {
                 courseViewModel.deleteCourse(course);
-                observeCourses();
-                setupRecyclerView();
             }
         });
     }
@@ -100,25 +132,25 @@ public class CoursesFragment extends Fragment {
                     Log.d("CoursesFragment", "Course: " + course.getCourse_name());
                 }
 
-                // Clear existing lists and add new data
+                // Update course lists
                 allCourses.clear();
-                allCourses.addAll(courses); // Store all courses
+                allCourses.addAll(courses);
                 filteredCourses.clear();
-                filteredCourses.addAll(courses); // Initially show all courses
+                filteredCourses.addAll(courses);
+
+                // Update adapter
+                courseAdapter.submitList(filteredCourses);
+
+                // Show/hide empty state
+                binding.textViewNoCourses.setVisibility(
+                        courses.isEmpty() ? View.VISIBLE : View.GONE
+                );
             } else {
                 Log.d("CoursesFragment", "No courses available.");
+                binding.textViewNoCourses.setVisibility(View.VISIBLE);
             }
-
-            // Update the adapter with the filtered list
-            courseAdapter.submitList(filteredCourses);
-
-            // Show/hide empty state based on courses
-            binding.textViewNoCourses.setVisibility(
-                    courses == null || courses.isEmpty() ? View.VISIBLE : View.GONE
-            );
         });
     }
-
 
     private void observeTeachers() {
         courseViewModel.getAllTeachers().observe(getViewLifecycleOwner(), teachers -> {
@@ -187,25 +219,24 @@ public class CoursesFragment extends Fragment {
 
                         if (existingCourse == null) {
                             courseViewModel.insertCourse(course);
-                            observeCourses();
-                            setupRecyclerView();
                         } else {
                             courseViewModel.updateCourse(course);
-                            observeCourses();
-                            setupRecyclerView();
                         }
                     } catch (NumberFormatException e) {
                         Toast.makeText(requireContext(), "Invalid coefficient", Toast.LENGTH_SHORT).show();
+                    } catch (IndexOutOfBoundsException e) {
+                        Toast.makeText(requireContext(), "Please select a teacher", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
     }
+
     private void setupSearchFunctionality() {
         binding.searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
-                // No action needed here
+                // No action needed
             }
 
             @Override
@@ -215,7 +246,7 @@ public class CoursesFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                // No action needed here
+                // No action needed
             }
         });
     }
@@ -237,11 +268,14 @@ public class CoursesFragment extends Fragment {
         courseAdapter.submitList(new ArrayList<>(filteredCourses));
     }
 
-
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+
+        // Close the database helper to prevent resource leaks
+        if (dbHelper != null) {
+            dbHelper.close();
+        }
     }
 }

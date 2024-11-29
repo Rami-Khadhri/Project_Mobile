@@ -31,7 +31,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Nom de la Tâche"
+            android:text="@string/nom_de_la_t_che"
             android:textSize="16sp"
             android:textColor="?attr/colorOnSurface"
             android:maxLines="1"
@@ -42,6 +42,7 @@
             android:id="@+id/imageViewDeleteTask"
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:contentDescription="ss"
             android:src="@drawable/ic_delete"
             app:tint="?attr/colorError" />
     </LinearLayout>
